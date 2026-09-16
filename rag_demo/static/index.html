@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="企业知识库智能问答">
+  <title>企业知识库 · 智能问答</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳至主要内容</a>
+
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="/" aria-label="企业知识库首页">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 2.7 19.4 6v5.1c0 4.4-3.2 8.1-7.4 9.6-4.2-1.5-7.4-5.2-7.4-9.6V6L12 2.7Z"
+                  stroke="#c9a84c" stroke-width="1.7" stroke-linejoin="round"/>
+            <path d="M8.2 12.3l2.3 2.3 5.3-5.1" stroke="#f0dfae" stroke-width="1.8"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span class="brand-copy">
+          <span class="brand-name">企业知识库</span>
+          <span class="brand-sub">内部 RAG 智能问答</span>
+        </span>
+      </a>
+
+      <nav class="main-nav" aria-label="主导航">
+        <button class="nav-item active" id="navAsk" type="button" aria-current="page">智能问答</button>
+        <button class="nav-item" id="navDocuments" type="button">文档库</button>
+        <button class="nav-item" id="navSources" type="button">检索依据</button>
+      </nav>
+
+      <div class="header-actions">
+        <button class="clear-button" id="clearChat" type="button">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M4 7h16M10 4h4M8.5 7l.6 13h5.8l.6-13M10.5 10.5v6M13.5 10.5v6"
+                  stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>清空对话</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell page-main" id="main">
+    <section class="workspace-title" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">KNOWLEDGE ASSISTANT</p>
+        <h1 id="page-title">企业智能问答</h1>
+        <p class="workspace-subtitle">基于企业知识库的问答与检索依据。</p>
+      </div>
+      <div class="service-state">
+        <span class="state-dot" aria-hidden="true"></span>
+        <span>服务就绪</span>
+      </div>
+    </section>
+
+    <form id="askForm" class="composer" novalidate autocomplete="off">
+      <label class="sr-only" for="q">输入问题</label>
+      <div class="composer-input">
+        <svg class="composer-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="11" cy="11" r="6.2" stroke="currentColor" stroke-width="1.8"/>
+          <path d="m15.5 15.5 4.2 4.2" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round"/>
+        </svg>
+        <textarea id="q" rows="1" placeholder="请输入要查询的问题"></textarea>
+      </div>
+      <button id="go" class="send-button" type="submit">
+        <svg class="send-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="m4 11.5 16-7-5.7 16-3.2-6.1L4 11.5Z" stroke="currentColor"
+                stroke-width="1.8" stroke-linejoin="round"/>
+          <path d="M11.1 14.4 20 4.5" stroke="currentColor" stroke-width="1.8"
+                stroke-linecap="round"/>
+        </svg>
+        <span class="send-spinner" aria-hidden="true"></span>
+        <span id="sendText">发送</span>
+      </button>
+    </form>
+
+    <section class="conversation" aria-label="问答记录">
+      <div class="conversation-header">
+        <div class="conversation-title">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M6.5 6h11v8.6H10L6.5 17.5V6Z" stroke="currentColor" stroke-width="1.7"
+                  stroke-linejoin="round"/>
+            <path d="M9 9.2h6M9 12h4" stroke="currentColor" stroke-width="1.7"
+                  stroke-linecap="round"/>
+          </svg>
+          <h2>问答记录</h2>
+        </div>
+        <span class="turn-badge" id="turnBadge">0 次问答</span>
+      </div>
+      <div class="conversation-body" id="threadBody">
+        <div class="empty-state" id="emptyState">
+          <div class="empty-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M5 4.5h4.2c1.8 0 2.8 1.1 2.8 3 0-1.9 1-3 2.8-3H19v13.6h-4.8c-1.7 0-2.8 1-3.2 2.3-.4-1.3-1.5-2.3-3.2-2.3H5V4.5Z"
+                    stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="empty-copy">
+            <h2>尚未开始问答</h2>
+            <p>提问后，问题与回答会在此展示。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="evidence" id="evidence" hidden>
+      <div class="evidence-header">
+        <div>
+          <h2>检索依据</h2>
+          <p id="evidenceMeta">最近一次查询的引用片段</p>
+        </div>
+        <span class="evidence-count" id="evidenceCount">0 个片段</span>
+      </div>
+      <div class="evidence-list" id="evidenceList"></div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-inner">
+      <div class="footer-meta">
+        <strong>企业知识库</strong>
+        <span class="footer-divider" aria-hidden="true"></span>
+        <span>© 2026 内部知识问答平台</span>
+      </div>
+      <p class="footer-note" id="llmStatusNote">当前使用模板答案，配置 LLM 后自动切换</p>
+    </div>
+  </footer>
+
+  <div class="library-modal" id="libraryModal" hidden>
+    <div class="library-backdrop" data-close-library></div>
+    <section class="library-dialog" role="dialog" aria-modal="true"
+             aria-labelledby="libraryTitle" aria-describedby="libraryDirectory">
+      <header class="library-dialog-header">
+        <div class="library-dialog-heading">
+          <span class="library-dialog-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M5 4.5h4.2c1.8 0 2.8 1.1 2.8 3 0-1.9 1-3 2.8-3H19v13.6h-4.8c-1.7 0-2.8 1-3.2 2.3-.4-1.3-1.5-2.3-3.2-2.3H5V4.5Z"
+                    stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <div>
+            <h2 id="libraryTitle">文档库</h2>
+            <p id="libraryDirectory">正在读取文档目录...</p>
+          </div>
+        </div>
+        <button class="modal-close" id="closeLibrary" type="button" aria-label="关闭文档库">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="m6 6 12 12M18 6 6 18" stroke="currentColor" stroke-width="1.8"
+                  stroke-linecap="round"/>
+          </svg>
+        </button>
+      </header>
+
+      <div class="library-grid">
+        <section class="library-panel" aria-labelledby="existingDocsTitle">
+          <div class="library-panel-head">
+            <div>
+              <h3 id="existingDocsTitle">已有文档</h3>
+              <p><span id="documentCount">0</span> 个文件</p>
+            </div>
+            <button class="secondary-button" id="refreshDocuments" type="button">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M19 8.5A7.5 7.5 0 1 0 19.3 15" stroke="currentColor"
+                      stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M19 4.5v4h-4" stroke="currentColor" stroke-width="1.8"
+                      stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>刷新</span>
+            </button>
+          </div>
+          <div class="library-list" id="documentList" aria-live="polite">
+            <div class="library-loading">
+              <span class="loading-ring" aria-hidden="true"></span>
+              <span>正在读取文档目录</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="library-panel wishlist-panel" aria-labelledby="wishlistTitle">
+          <div class="library-panel-head">
+            <div>
+              <h3 id="wishlistTitle">想加什么文档</h3>
+              <p>待添加文档愿望清单</p>
+            </div>
+          </div>
+          <div class="wishlist-form">
+            <div class="wishlist-file-display">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M3.8 7.5h6l1.7 2h8.7v9H3.8v-11Z" stroke="currentColor"
+                      stroke-width="1.7" stroke-linejoin="round"/>
+                <path d="M3.8 7.5v-2h5.1l1.5 2" stroke="currentColor"
+                      stroke-width="1.7" stroke-linejoin="round"/>
+              </svg>
+              <span id="wishlistFileDisplay">未选择文件</span>
+            </div>
+            <button class="wishlist-add-new" id="wishlistAddButton" type="button">添加</button>
+            <input id="wishlistFilePicker" type="file" accept=".txt,.md,.markdown,.csv,.docx,.pdf" multiple hidden>
+          </div>
+          <div class="library-list wishlist-list" id="wishlistList"></div>
+          <div class="wishlist-footer">
+            <button class="primary-button" id="submitWishlist" type="button">提交需求</button>
+          </div>
+        </section>
+      </div>
+    </section>
+  </div>
+
+  <div class="toast" id="libraryToast" role="status" aria-live="polite" hidden></div>
+
+  <script>
+    const qInput = document.getElementById("q");
+    const askForm = document.getElementById("askForm");
+    const goButton = document.getElementById("go");
+    const sendText = document.getElementById("sendText");
+    const threadBody = document.getElementById("threadBody");
+    const emptyState = document.getElementById("emptyState");
+    const turnBadge = document.getElementById("turnBadge");
+    const evidence = document.getElementById("evidence");
+    const evidenceMeta = document.getElementById("evidenceMeta");
+    const evidenceCount = document.getElementById("evidenceCount");
+    const evidenceList = document.getElementById("evidenceList");
+    const navAsk = document.getElementById("navAsk");
+    const navDocuments = document.getElementById("navDocuments");
+    const navSources = document.getElementById("navSources");
+    const clearChat = document.getElementById("clearChat");
+    const libraryModal = document.getElementById("libraryModal");
+    const closeLibrary = document.getElementById("closeLibrary");
+    const refreshDocuments = document.getElementById("refreshDocuments");
+    const documentList = document.getElementById("documentList");
+    const documentCount = document.getElementById("documentCount");
+    const libraryDirectory = document.getElementById("libraryDirectory");
+    const wishlistFileDisplay = document.getElementById("wishlistFileDisplay");
+    const wishlistAddButton = document.getElementById("wishlistAddButton");
+    const wishlistFilePicker = document.getElementById("wishlistFilePicker");
+    const wishlistList = document.getElementById("wishlistList");
+    const submitWishlist = document.getElementById("submitWishlist");
+    const libraryToast = document.getElementById("libraryToast");
+    const llmStatusNote = document.getElementById("llmStatusNote");
+
+    const WISHLIST_STORAGE_KEY = "rag_document_wishlist_v1";
+    let documentWishlist = loadWishlist();
+
+    let busy = false;
+    let runSeq = 0;
+    let turnSeq = 0;
+    let turnCount = 0;
+    let activeController = null;
+    let documentsLoading = false;
+    let wishlistUploading = false;
+    let toastTimer = null;
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, (c) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[c]));
+    }
+
+    function resizeInput() {
+      qInput.style.height = "auto";
+      qInput.style.height = Math.min(Math.max(qInput.scrollHeight, 54), 150) + "px";
+    }
+
+    function setBusyUI(next) {
+      busy = next;
+      goButton.disabled = next;
+      goButton.classList.toggle("is-loading", next);
+      sendText.textContent = next ? "处理中" : "发送";
+    }
+
+    function currentTime() {
+      const now = new Date();
+      const text = now.toLocaleTimeString("zh-CN", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      });
+      return { text, iso: now.toISOString() };
+    }
+
+    function updateTurnBadge() {
+      turnBadge.textContent = turnCount + " 次问答";
+    }
+
+    function createWishlistId() {
+      if (window.crypto && typeof window.crypto.randomUUID === "function") {
+        return window.crypto.randomUUID();
+      }
+      return Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 10);
+    }
+
+    function loadWishlist() {
+      try {
+        const raw = window.localStorage.getItem(WISHLIST_STORAGE_KEY);
+        const parsed = JSON.parse(raw || "[]");
+        if (!Array.isArray(parsed)) return [];
+        return parsed
+          .map((entry) => {
+            const name = typeof entry === "string" ? entry : entry && entry.name;
+            if (typeof name !== "string" || !name.trim()) return null;
+            return {
+              id: (entry && entry.id) || createWishlistId(),
+              name: name.trim(),
+              size: Number.isFinite(entry && entry.size) ? entry.size : null,
+              lastModified: Number.isFinite(entry && entry.lastModified)
+                ? entry.lastModified
+                : null
+            };
+          })
+          .filter(Boolean);
+      } catch (err) {
+        return [];
+      }
+    }
+
+    function saveWishlist() {
+      try {
+        window.localStorage.setItem(
+          WISHLIST_STORAGE_KEY,
+          JSON.stringify(documentWishlist)
+        );
+        return true;
+      } catch (err) {
+        showToast("浏览器本地存储不可用");
+        return false;
+      }
+    }
+
+    function setWishlistUploading(loading) {
+      wishlistUploading = loading;
+      wishlistAddButton.disabled = loading;
+      wishlistAddButton.textContent = loading ? "上传中" : "添加";
+    }
+
+    async function addWishlistFiles(fileList) {
+      const files = Array.from(fileList || []);
+      if (!files.length || wishlistUploading) return;
+      setWishlistUploading(true);
+      wishlistFileDisplay.textContent = "正在上传 " + files.length + " 个文件...";
+      let uploaded = 0;
+      let duplicates = 0;
+      let failed = 0;
+      let lastError = "";
+
+      for (const file of files) {
+        try {
+          const response = await fetch(
+            "/api/documents/upload?name=" + encodeURIComponent(file.name),
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/octet-stream" },
+              body: file
+            }
+          );
+          const data = await response.json().catch(() => null);
+          if (response.status === 409) {
+            duplicates += 1;
+            continue;
+          }
+          if (!response.ok || !data || data.error || !data.document) {
+            throw new Error(
+              (data && data.error) || "上传失败（HTTP " + response.status + "）"
+            );
+          }
+          const record = data.document;
+          const name = record.name || file.name;
+          const modified = new Date(record.modified).getTime();
+          const item = {
+            id: createWishlistId(),
+            name,
+            size: Number.isFinite(record.size) ? record.size : file.size,
+            lastModified: Number.isFinite(modified)
+              ? modified
+              : file.lastModified,
+            status: "uploaded",
+            uploadedAt: new Date().toISOString()
+          };
+          const existingIndex = documentWishlist.findIndex(
+            (entry) => entry.name.toLocaleLowerCase() === name.toLocaleLowerCase()
+          );
+          if (existingIndex >= 0) {
+            item.id = documentWishlist[existingIndex].id;
+            documentWishlist[existingIndex] = item;
+          } else {
+            documentWishlist.push(item);
+          }
+          uploaded += 1;
+        } catch (err) {
+          failed += 1;
+          lastError = err.message;
+        }
+      }
+
+      if (uploaded) {
+        saveWishlist();
+        renderWishlist();
+      }
+      while (documentsLoading) {
+        await new Promise((resolve) => window.setTimeout(resolve, 50));
+      }
+      await loadDocuments();
+      wishlistFileDisplay.textContent = uploaded
+        ? uploaded + " 个文件已入库"
+        : files.length + " 个文件未入库";
+      wishlistFilePicker.value = "";
+      setWishlistUploading(false);
+
+      if (uploaded && (duplicates || failed)) {
+        showToast(
+          "已入库 " + uploaded + " 个，跳过 " + duplicates +
+          " 个，失败 " + failed + " 个"
+        );
+      } else if (uploaded) {
+        showToast("已入库 " + uploaded + " 个文档");
+      } else if (duplicates && !failed) {
+        showToast("所选文档已存在于文档库");
+      } else {
+        showToast("添加失败：" + (lastError || "未知错误"));
+      }
+    }
+
+    function deleteWishlistItem(id) {
+      const originalLength = documentWishlist.length;
+      documentWishlist = documentWishlist.filter((item) => item.id !== id);
+      if (documentWishlist.length === originalLength) return;
+      saveWishlist();
+      renderWishlist();
+      showToast("已删除");
+    }
+
+    function formatFileSize(bytes) {
+      const value = Number(bytes);
+      if (!Number.isFinite(value)) return "-";
+      if (value < 1024) return value + " B";
+      if (value < 1024 * 1024) return (value / 1024).toFixed(1) + " KB";
+      return (value / (1024 * 1024)).toFixed(1) + " MB";
+    }
+
+    function formatModified(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return value || "-";
+      return date.toLocaleString("zh-CN", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      });
+    }
+
+    function setDocumentsLoading(loading) {
+      documentsLoading = loading;
+      refreshDocuments.disabled = loading;
+      refreshDocuments.classList.toggle("is-loading", loading);
+    }
+
+    function reconcileWishlistWithDocuments(documents) {
+      const names = new Set(documents.map((document) => document.name));
+      let changed = false;
+      documentWishlist.forEach((item) => {
+        if (item.status === "uploaded" && !names.has(item.name)) {
+          item.status = "pending";
+          delete item.uploadedAt;
+          changed = true;
+        }
+      });
+      if (changed) {
+        saveWishlist();
+        renderWishlist();
+      }
+    }
+
+    function renderDocuments(data) {
+      const documents = Array.isArray(data.documents) ? data.documents : [];
+      reconcileWishlistWithDocuments(documents);
+      documentCount.textContent = documents.length;
+      const directory = data.directory || data.directory_name || "未识别";
+      libraryDirectory.textContent = "目录：" + directory;
+      libraryDirectory.title = directory;
+      if (data.index_error) {
+        showToast("文档已刷新，但检索索引同步失败");
+      }
+      if (!documents.length) {
+        documentList.innerHTML = `
+          <div class="library-empty">
+            <strong>暂无文档</strong>
+            <span>可刷新目录或添加新的文档。</span>
+          </div>
+        `;
+        return;
+      }
+      documentList.innerHTML = documents.map((document) => `
+        <div class="document-row">
+          <span class="document-file-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M7 3.5h6.6L18 7.9v12.6H7V3.5Z" stroke="currentColor"
+                    stroke-width="1.6" stroke-linejoin="round"/>
+              <path d="M13.4 3.8V8h4.2M9.8 12h5.4M9.8 15.2h5.4"
+                    stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <div class="document-copy">
+            <strong title="${escapeHtml(document.name || "")}">${escapeHtml(document.name || "")}</strong>
+            <span>${escapeHtml(formatFileSize(document.size))} · ${escapeHtml(formatModified(document.modified))}</span>
+          </div>
+          <div class="document-actions">
+            <span class="document-type">${escapeHtml(document.extension || "FILE")}</span>
+            <button class="document-delete" type="button"
+                    data-delete-document-name="${escapeHtml(document.name || "")}"
+                    aria-label="删除 ${escapeHtml(document.name || "")}">删除</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderDocumentError(message) {
+      documentCount.textContent = "0";
+      documentList.innerHTML = `
+        <div class="library-empty is-error">
+          <strong>目录读取失败</strong>
+          <span>${escapeHtml(message)}</span>
+        </div>
+      `;
+    }
+
+    async function loadDocuments() {
+      if (documentsLoading) return;
+      setDocumentsLoading(true);
+      documentList.innerHTML = `
+        <div class="library-loading">
+          <span class="loading-ring" aria-hidden="true"></span>
+          <span>正在读取文档目录</span>
+        </div>
+      `;
+      try {
+        const response = await fetch("/api/documents", { cache: "no-store" });
+        const data = await response.json().catch(() => null);
+        if (!response.ok || !data || data.error) {
+          throw new Error((data && data.error) || "请求失败（HTTP " + response.status + "）");
+        }
+        renderDocuments(data);
+      } catch (err) {
+        renderDocumentError(err.message);
+      } finally {
+        setDocumentsLoading(false);
+      }
+    }
+
+    async function deleteDocument(name) {
+      if (!name) return;
+      const confirmed = window.confirm("确定要从文档库删除《" + name + "》吗？");
+      if (!confirmed) return;
+      documentList.querySelectorAll(".document-delete").forEach((button) => {
+        button.disabled = true;
+      });
+      try {
+        const response = await fetch(
+          "/api/documents?name=" + encodeURIComponent(name),
+          { method: "DELETE" }
+        );
+        const data = await response.json().catch(() => null);
+        if (!response.ok || !data || data.error) {
+          throw new Error((data && data.error) || "删除失败（HTTP " + response.status + "）");
+        }
+        const before = documentWishlist.length;
+        documentWishlist = documentWishlist.filter(
+          (item) => item.name.toLocaleLowerCase() !== name.toLocaleLowerCase()
+        );
+        if (documentWishlist.length !== before) {
+          saveWishlist();
+          renderWishlist();
+        }
+        await loadDocuments();
+        showToast("已删除文档并更新检索索引");
+      } catch (err) {
+        showToast("删除失败：" + err.message);
+        await loadDocuments();
+      }
+    }
+
+    function renderWishlist() {
+      if (!documentWishlist.length) {
+        wishlistList.innerHTML = `
+          <div class="library-empty">
+            <strong>暂无待添加文档</strong>
+            <span>输入文档名称或路径后点击“添加”。</span>
+          </div>
+        `;
+        return;
+      }
+      wishlistList.innerHTML = documentWishlist.map((item) => {
+        const details = [];
+        if (item.size != null) details.push(formatFileSize(item.size));
+        if (item.lastModified != null) details.push(formatModified(item.lastModified));
+        const meta = details.length ? details.join(" · ") : "文件元数据不可用";
+        const statusLabel = item.status === "uploaded" ? "已入库" : "待添加";
+        const statusClass = item.status === "uploaded" ? " is-uploaded" : "";
+        return `
+          <div class="wishlist-row" data-wishlist-id="${escapeHtml(item.id)}">
+            <div class="wishlist-copy">
+              <strong title="${escapeHtml(item.name)}">${escapeHtml(item.name)}</strong>
+              <span class="wishlist-meta">
+                <span class="category-badge${statusClass}">${statusLabel}</span>
+                <span>${escapeHtml(meta)}</span>
+              </span>
+            </div>
+            <button class="wishlist-delete" type="button"
+                    data-delete-wishlist-id="${escapeHtml(item.id)}"
+                    aria-label="删除 ${escapeHtml(item.name)}">删除</button>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function showToast(message) {
+      window.clearTimeout(toastTimer);
+      libraryToast.textContent = message;
+      libraryToast.hidden = false;
+      window.requestAnimationFrame(() => libraryToast.classList.add("is-visible"));
+      toastTimer = window.setTimeout(() => {
+        libraryToast.classList.remove("is-visible");
+        toastTimer = window.setTimeout(() => {
+          libraryToast.hidden = true;
+        }, 180);
+      }, 2200);
+    }
+
+    function openLibrary() {
+      if (!libraryModal.hidden) return;
+      libraryModal.hidden = false;
+      document.body.classList.add("modal-open");
+      setActiveNav(navDocuments);
+      renderWishlist();
+      loadDocuments();
+      closeLibrary.focus();
+    }
+
+    function closeLibraryModal() {
+      libraryModal.hidden = true;
+      document.body.classList.remove("modal-open");
+      setActiveNav(navAsk);
+      navDocuments.focus();
+    }
+
+    function createTurn(question) {
+      const id = ++turnSeq;
+      const stamp = currentTime();
+      const turn = document.createElement("section");
+      turn.className = "qa-pair";
+      turn.innerHTML = `
+        <div class="qa-side question-side">
+          <div class="speaker">
+            <span class="speaker-avatar user-avatar" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.7"/>
+                <path d="M5.2 19.3a7 7 0 0 1 13.6 0" stroke="currentColor"
+                      stroke-width="1.7" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <span>我的提问</span>
+            <time datetime="${stamp.iso}">${escapeHtml(stamp.text)}</time>
+          </div>
+          <div class="message user-message"></div>
+        </div>
+        <div class="center-rail" aria-hidden="true"><span></span></div>
+        <div class="qa-side answer-side">
+          <div class="speaker">
+            <span class="speaker-avatar ai-avatar" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M20 11.6c0 4.1-3.6 7.4-8 7.4a8.6 8.6 0 0 1-3.1-.6L4 20l1.5-4.1A7 7 0 0 1 4 11.6C4 7.5 7.6 4.2 12 4.2s8 3.3 8 7.4Z"
+                      stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+                <path d="M9 11.6h.01M12.5 11.6h.01M16 11.6h.01" stroke="currentColor"
+                      stroke-width="2.2" stroke-linecap="round"/>
+              </svg>
+            </span>
+            <span>知识助手</span>
+            <span class="answer-status" id="status-${id}" data-state="busy">正在检索</span>
+          </div>
+          <div class="message ai-message is-pending" id="answer-${id}" aria-live="polite">
+            <span class="typing-indicator" aria-hidden="true"><i></i><i></i><i></i></span>
+          </div>
+          <p class="answer-meta" id="meta-${id}"></p>
+        </div>
+      `;
+      turn.querySelector(".user-message").textContent = question;
+      return { id, element: turn };
+    }
+
+    function formatBackend(data) {
+      if (data.used_backend === "llm") return "大模型";
+      return data.llm_status === "disabled"
+        ? "模板答案（未配置 LLM）"
+        : "模板答案（LLM 不可用）";
+    }
+
+    function updateLlmNotice(data) {
+      llmStatusNote.hidden = Boolean(data && data.used_backend === "llm");
+    }
+
+    function formatMeta(data) {
+      const count = Array.isArray(data.results) ? data.results.length : 0;
+      const latency = data.latency_ms != null ? data.latency_ms + " ms" : "-";
+      return "回答完成 · " + latency + " · 来源 " + formatBackend(data) +
+             " · 引用 " + count + " 个片段";
+    }
+
+    function renderEvidence(data) {
+      const results = Array.isArray(data.results) ? data.results : [];
+      if (!results.length) {
+        evidence.hidden = true;
+        evidenceList.innerHTML = "";
+        return;
+      }
+      evidence.hidden = false;
+      evidenceCount.textContent = results.length + " 个片段";
+      evidenceMeta.textContent = "最近查询："
+        + escapeHtml(typeof data.query === "string" ? data.query : "")
+        + " · " + (data.latency_ms != null ? data.latency_ms + " ms" : "");
+
+      const cards = results.map((item, index) => {
+        const heading = item.heading ? " · " + escapeHtml(item.heading) : "";
+        const docId = escapeHtml(item.doc_id || "");
+        const snippet = escapeHtml(item.text || "");
+        return `
+          <article class="evidence-card">
+            <div class="evidence-card-top">
+              <span class="evidence-rank">${Number(item.rank) || index + 1}</span>
+              <div class="evidence-title">
+                <strong>${escapeHtml(item.doc_title || "未命名文档")}</strong>
+                <small>${docId}${heading}</small>
+              </div>
+            </div>
+            <p class="evidence-snippet">${snippet}</p>
+          </article>
+        `;
+      });
+      evidenceList.innerHTML = cards.join("");
+    }
+
+    function typeAnswer(el, text, runId) {
+      return new Promise((resolve) => {
+        if (runId !== runSeq) {
+          resolve();
+          return;
+        }
+        if (!text) {
+          el.textContent = "";
+          el.classList.remove("is-typing");
+          resolve();
+          return;
+        }
+        const total = text.length;
+        const step = total <= 90 ? 1 : Math.max(1, Math.ceil(total / 280));
+        const interval = step === 1 ? 15 : 10;
+        let index = 0;
+        el.classList.add("is-typing");
+
+        const tick = () => {
+          if (runId !== runSeq) {
+            el.classList.remove("is-typing");
+            resolve();
+            return;
+          }
+          index = Math.min(total, index + step);
+          el.textContent = text.slice(0, index);
+          if (index >= total) {
+            el.textContent = text;
+            el.classList.remove("is-typing");
+            resolve();
+            return;
+          }
+          window.setTimeout(tick, interval);
+        };
+        window.setTimeout(tick, interval);
+      });
+    }
+
+    async function askQuestion() {
+      const question = qInput.value.trim();
+      if (!question || busy) return;
+
+      const runId = ++runSeq;
+      const { element } = createTurn(question);
+      emptyState.hidden = true;
+      threadBody.appendChild(element);
+      const answerEl = element.querySelector(".ai-message");
+      const stateEl = element.querySelector(".answer-status");
+      const metaEl = element.querySelector(".answer-meta");
+      turnCount += 1;
+      updateTurnBadge();
+      qInput.value = "";
+      resizeInput();
+      setBusyUI(true);
+
+      const controller = new AbortController();
+      activeController = controller;
+
+      try {
+        const url = "/api/query?q=" + encodeURIComponent(question);
+        const response = await fetch(url, { signal: controller.signal });
+        let data = null;
+        try {
+          data = await response.json();
+        } catch (err) {
+          data = null;
+        }
+        if (runId !== runSeq) return;
+        if (!response.ok || !data || data.error) {
+          throw new Error((data && data.error) || "请求失败（HTTP " + response.status + "）");
+        }
+
+        const text = typeof data.answer === "string" ? data.answer : "";
+        answerEl.classList.remove("is-pending");
+        stateEl.textContent = "生成中";
+        await typeAnswer(answerEl, text, runId);
+
+        if (runId !== runSeq) return;
+        stateEl.dataset.state = "done";
+        stateEl.textContent = "回答完成";
+        metaEl.textContent = formatMeta(data);
+        updateLlmNotice(data);
+        renderEvidence(data);
+        element.querySelector(".answer-side").scrollIntoView({
+          behavior: "smooth",
+          block: "nearest"
+        });
+      } catch (err) {
+        if (err.name === "AbortError" || runId !== runSeq) return;
+        answerEl.classList.remove("is-pending");
+        answerEl.classList.add("is-error");
+        answerEl.textContent = "请求失败：" + err.message;
+        stateEl.dataset.state = "error";
+        stateEl.textContent = "请求失败";
+        metaEl.textContent = err.message;
+      } finally {
+        if (runId === runSeq) {
+          activeController = null;
+          setBusyUI(false);
+        }
+      }
+    }
+
+    function clearAll() {
+      runSeq += 1;
+      if (activeController) {
+        activeController.abort();
+        activeController = null;
+      }
+      threadBody.querySelectorAll(".qa-pair").forEach((node) => node.remove());
+      emptyState.hidden = false;
+      evidence.hidden = true;
+      evidenceList.innerHTML = "";
+      turnCount = 0;
+      updateTurnBadge();
+      setBusyUI(false);
+      llmStatusNote.hidden = false;
+      setActiveNav(navAsk);
+      qInput.focus();
+    }
+
+    function setActiveNav(active) {
+      [navAsk, navDocuments, navSources].forEach((item) => {
+        const isActive = item === active;
+        item.classList.toggle("active", isActive);
+        if (isActive) {
+          item.setAttribute("aria-current", "page");
+        } else {
+          item.removeAttribute("aria-current");
+        }
+      });
+    }
+
+    askForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      askQuestion();
+    });
+
+    qInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" && !event.shiftKey && !event.isComposing) {
+        event.preventDefault();
+        askForm.requestSubmit();
+      }
+    });
+
+    qInput.addEventListener("input", resizeInput);
+
+    clearChat.addEventListener("click", clearAll);
+
+    navDocuments.addEventListener("click", openLibrary);
+    closeLibrary.addEventListener("click", closeLibraryModal);
+    refreshDocuments.addEventListener("click", loadDocuments);
+    documentList.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-delete-document-name]");
+      if (!button || button.disabled) return;
+      deleteDocument(button.dataset.deleteDocumentName);
+    });
+
+    libraryModal.querySelector("[data-close-library]").addEventListener("click", closeLibraryModal);
+
+    libraryModal.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeLibraryModal();
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const focusable = Array.from(
+        libraryModal.querySelectorAll("button:not([disabled]), [href], input, select, textarea")
+      ).filter((item) => !item.hidden);
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+
+    wishlistAddButton.addEventListener("click", () => wishlistFilePicker.click());
+    wishlistFilePicker.addEventListener("change", () => {
+      addWishlistFiles(wishlistFilePicker.files);
+    });
+
+    wishlistList.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-delete-wishlist-id]");
+      if (!button) return;
+      deleteWishlistItem(button.dataset.deleteWishlistId);
+    });
+
+    submitWishlist.addEventListener("click", () => {
+      const payload = documentWishlist.map((item) => ({
+        name: item.name,
+        size: item.size,
+        lastModified: item.lastModified,
+        status: item.status || "pending"
+      }));
+      console.log(JSON.stringify(payload, null, 2));
+      showToast("已记录");
+    });
+
+    navAsk.addEventListener("click", () => {
+      setActiveNav(navAsk);
+      document.getElementById("main").scrollIntoView({ behavior: "smooth", block: "start" });
+      window.setTimeout(() => qInput.focus(), 200);
+    });
+
+    navSources.addEventListener("click", () => {
+      setActiveNav(navSources);
+      if (!evidence.hidden) {
+        evidence.scrollIntoView({ behavior: "smooth", block: "start" });
+      } else {
+        qInput.focus();
+      }
+    });
+
+    resizeInput();
+  </script>
+</body>
+</html>

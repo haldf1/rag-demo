@@ -1,0 +1,5 @@
+# 可选增强依赖：PDF 解析、本地语义模型、向量库
+# 安装前先执行：pip install -r requirements.txt
+pymupdf>=1.24
+sentence-transformers>=3.0
+chromadb>=0.5

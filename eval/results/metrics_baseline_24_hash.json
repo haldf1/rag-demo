@@ -1,0 +1,676 @@
+{
+  "overall": {
+    "count": 24,
+    "top_k": 3,
+    "avg_recall_at_top_k": 0.9,
+    "avg_precision_at_top_k": 0.25,
+    "avg_mrr": 0.6736111111111112,
+    "answer_hit_rate": 0.65,
+    "avg_rag_tokens": 234.83333333333334,
+    "avg_full_tokens": 11941.916666666666,
+    "avg_cost_ratio": 9.197916666666666,
+    "embedding_backend": "hash",
+    "index_docs": 9,
+    "index_chunks": 456
+  },
+  "by_category": {
+    "long_doc": {
+      "count": 5,
+      "avg_recall_at_top_k": 1.0,
+      "avg_precision_at_top_k": 0.3333333333333333,
+      "avg_mrr": 1.0,
+      "answer_hit_rate": 0.4,
+      "avg_rag_tokens": 122.8,
+      "avg_full_tokens": 11943.2,
+      "avg_cost_ratio": 9.956
+    },
+    "no_answer": {
+      "count": 4,
+      "avg_recall_at_top_k": null,
+      "avg_precision_at_top_k": 0.0,
+      "avg_mrr": 0.0,
+      "answer_hit_rate": null,
+      "avg_rag_tokens": 201.0,
+      "avg_full_tokens": 11940.5,
+      "avg_cost_ratio": 9.4225
+    },
+    "normal": {
+      "count": 5,
+      "avg_recall_at_top_k": 1.0,
+      "avg_precision_at_top_k": 0.3333333333333333,
+      "avg_mrr": 1.0,
+      "answer_hit_rate": 1.0,
+      "avg_rag_tokens": 293.4,
+      "avg_full_tokens": 11938.8,
+      "avg_cost_ratio": 8.814
+    },
+    "paraphrase": {
+      "count": 5,
+      "avg_recall_at_top_k": 1.0,
+      "avg_precision_at_top_k": 0.3333333333333333,
+      "avg_mrr": 0.7333333333333333,
+      "answer_hit_rate": 0.6,
+      "avg_rag_tokens": 303.2,
+      "avg_full_tokens": 11939.2,
+      "avg_cost_ratio": 8.745999999999999
+    },
+    "similar_docs": {
+      "count": 5,
+      "avg_recall_at_top_k": 0.6,
+      "avg_precision_at_top_k": 0.2,
+      "avg_mrr": 0.5,
+      "answer_hit_rate": 0.6,
+      "avg_rag_tokens": 247.0,
+      "avg_full_tokens": 11947.6,
+      "avg_cost_ratio": 9.096
+    }
+  },
+  "rows": [
+    {
+      "id": "L01",
+      "category": "long_doc",
+      "query": "第 76 周周报中 3 号机房温度异常的原因是什么？",
+      "expected_docs": [
+        "09_知识库运维周报合集.txt"
+      ],
+      "expected_keywords": [
+        "冷媒",
+        "28.5"
+      ],
+      "recall_at_top_k": 1.0,
+      "precision_at_top_k": 0.3333333333333333,
+      "mrr": 1.0,
+      "answer_hit": true,
+      "top_docs": [
+        "09_知识库运维周报合集.txt",
+        "09_知识库运维周报合集.txt",
+        "09_知识库运维周报合集.txt"
+      ],
+      "rag_input_tokens": 125,
+      "rag_cost": 0.00265,
+      "full_input_tokens": 11952,
+      "full_cost": 0.026304,
+      "cost_ratio": 9.93
+    },
+    {
+      "id": "L02",
+      "category": "long_doc",
+      "query": "第 52 周完成了哪项系统升级？",
+      "expected_docs": [
+        "09_知识库运维周报合集.txt"
+      ],
+      "expected_keywords": [
+        "检索",
+        "8.2",
+        "1.3"
+      ],
+      "recall_at_top_k": 1.0,
+      "precision_at_top_k": 0.3333333333333333,
+      "mrr": 1.0,
+      "answer_hit": false,
+      "top_docs": [
+        "09_知识库运维周报合集.txt",
+        "05_数据中心搬迁项目周报.md",
+        "09_知识库运维周报合集.txt"
+      ],
+      "rag_input_tokens": 231,
+      "rag_cost": 0.002862,
+      "full_input_tokens": 11938,
+      "full_cost": 0.026276,
+      "cost_ratio": 9.18
+    },
+    {
+      "id": "L03",
+      "category": "long_doc",
+      "query": "第 88 周新员工培训的主题是什么？",
+      "expected_docs": [
+        "09_知识库运维周报合集.txt"
+      ],
+      "expected_keywords": [
+        "提示词工程",
+        "知识库维护"
+      ],
+      "recall_at_top_k": 1.0,
+      "precision_at_top_k": 0.3333333333333333,
+      "mrr": 1.0,
+      "answer_hit": true,
+      "top_docs": [
+        "09_知识库运维周报合集.txt",
+        "09_知识库运维周报合集.txt",
+        "09_知识库运维周报合集.txt"
+      ],
+      "rag_input_tokens": 114,
+      "rag_cost": 0.002628,
+      "full_input_tokens": 11942,
+      "full_cost": 0.026284,
+      "cost_ratio": 10.0
+    },
+    {
+      "id": "L04",
+      "category": "long_doc",
+      "query": "第 63 周周报记录了什么风险事件？",
+      "expected_docs": [
+        "09_知识库运维周报合集.txt"
+      ],
+      "expected_keywords": [
+        "磁盘",
+        "91"
+      ],
+      "recall_at_top_k": 1.0,
+      "precision_at_top_k": 0.3333333333333333,
+      "mrr": 1.0,
+      "answer_hit": false,
+      "top_docs": [
+        "09_知识库运维周报合集.txt",
+        "09_知识库运维周报合集.txt",
+        "09_知识库运维周报合集.txt"
+      ],
+      "rag_input_tokens": 90,
+      "rag_cost": 0.00258,
+      "full_input_tokens": 11942,
+      "full_cost": 0.026284,
+      "cost_ratio": 10.19
+    },
+    {
+      "id": "L05",
+      "category": "long_doc",
+      "query": "周报合集覆盖了第几周到第几周？",
+      "expected_docs": [
+        "09_知识库运维周报合集.txt"
+      ],
+      "expected_keywords": [
+        "第 1 周",
+        "第 100 周"
+      ],
+      "recall_at_top_k": 1.0,
+      "precision_at_top_k": 0.3333333333333333,
+      "mrr": 1.0,
+      "answer_hit": false,
+      "top_docs": [
+        "09_知识库运维周报合集.txt",
+        "09_知识库运维周报合集.txt",
+        "09_知识库运维周报合集.txt"
+      ],
+      "rag_input_tokens": 54,
+      "rag_cost": 0.002508,
+      "full_input_tokens": 11942,
+      "full_cost": 0.026284,
+      "cost_ratio": 10.48
+    },
+    {
+      "id": "S01",
+      "category": "similar_docs",
+      "query": "客服收到客户开发票的请求，应该怎么做？",
+      "expected_docs": [
+        "03_客户服务操作手册.md"
+      ],
+      "expected_keywords": [
+        "开票",
+        "3 个工作日"
+      ],
+      "recall_at_top_k": 1.0,
+      "precision_at_top_k": 0.3333333333333333,
+      "mrr": 1.0,
+      "answer_hit": true,
+      "top_docs": [
+        "03_客户服务操作手册.md",
+        "03_客户服务操作手册.md",
+        "09_知识库运维周报合集.txt"
+      ],
+      "rag_input_tokens": 195,
+      "rag_cost": 0.00279,
+      "full_input_tokens": 11948,
+      "full_cost": 0.026296,
+      "cost_ratio": 9.43
+    },
+    {
+      "id": "S02",
+      "category": "similar_docs",
+      "query": "服务器磁盘告警超过 90% 应该启动什么流程？",
+      "expected_docs": [
+        "04_技术运维操作手册.md"
+      ],
+      "expected_keywords": [
+        "扩容",
+        "90"
+      ],
+      "recall_at_top_k": 0.0,
+      "precision_at_top_k": 0.0,
+      "mrr": 0.0,
+      "answer_hit": false,
+      "top_docs": [
+        "02_报销管理制度.docx",
+        "06_常见问题FAQ.md",
+        "05_数据中心搬迁项目周报.md"
+      ],
+      "rag_input_tokens": 235,
+      "rag_cost": 0.00287,
+      "full_input_tokens": 11950,
+      "full_cost": 0.0263,
+      "cost_ratio": 9.16
+    },
+    {
+      "id": "S03",
+      "category": "similar_docs",
+      "query": "客户退换货的时效要求是什么？",
+      "expected_docs": [
+        "03_客户服务操作手册.md"
+      ],
+      "expected_keywords": [
+        "7 天",
+        "15 天"
+      ],
+      "recall_at_top_k": 1.0,
+      "precision_at_top_k": 0.3333333333333333,
+      "mrr": 0.5,
+      "answer_hit": false,
+      "top_docs": [
+        "06_常见问题FAQ.md",
+        "03_客户服务操作手册.md",
+        "01_员工手册.md"
+      ],
+      "rag_input_tokens": 215,
+      "rag_cost": 0.00283,
+      "full_input_tokens": 11940,
+      "full_cost": 0.02628,
+      "cost_ratio": 9.29
+    },
+    {
+      "id": "S04",
+      "category": "similar_docs",
+      "query": "生产环境发布必须在什么时间窗口进行？",
+      "expected_docs": [
+        "04_技术运维操作手册.md"
+      ],
+      "expected_keywords": [
+        "周二",
+        "周四",
+        "22:00"
+      ],
+      "recall_at_top_k": 1.0,
+      "precision_at_top_k": 0.3333333333333333,
+      "mrr": 1.0,
+      "answer_hit": true,
+      "top_docs": [
+        "04_技术运维操作手册.md",
+        "01_员工手册.md",
+        "06_常见问题FAQ.md"
+      ],
+      "rag_input_tokens": 293,
+      "rag_cost": 0.002986,
+      "full_input_tokens": 11948,
+      "full_cost": 0.026296,
+      "cost_ratio": 8.81
+    },
+    {
+      "id": "S05",
+      "category": "similar_docs",
+      "query": "员工泄露客户数据属于什么事件，需要怎么做？",
+      "expected_docs": [
+        "08_信息安全管理制度.md"
+      ],
+      "expected_keywords": [
+        "安全事件",
+        "1 小时"
+      ],
+      "recall_at_top_k": 0.0,
+      "precision_at_top_k": 0.0,
+      "mrr": 0.0,
+      "answer_hit": true,
+      "top_docs": [
+        "05_数据中心搬迁项目周报.md",
+        "09_知识库运维周报合集.txt",
+        "03_客户服务操作手册.md"
+      ],
+      "rag_input_tokens": 297,
+      "rag_cost": 0.002994,
+      "full_input_tokens": 11952,
+      "full_cost": 0.026304,
+      "cost_ratio": 8.79
+    },
+    {
+      "id": "P01",
+      "category": "paraphrase",
+      "query": "我想休年假，一共能休几天，怎么申请？",
+      "expected_docs": [
+        "01_员工手册.md"
+      ],
+      "expected_keywords": [
+        "年假",
+        "5 天",
+        "OA"
+      ],
+      "recall_at_top_k": 1.0,
+      "precision_at_top_k": 0.3333333333333333,
+      "mrr": 0.3333333333333333,
+      "answer_hit": false,
+      "top_docs": [
+        "06_常见问题FAQ.md",
+        "07_会议室使用规范.md",
+        "01_员工手册.md"
+      ],
+      "rag_input_tokens": 289,
+      "rag_cost": 0.002978,
+      "full_input_tokens": 11944,
+      "full_cost": 0.026288,
+      "cost_ratio": 8.83
+    },
+    {
+      "id": "P02",
+      "category": "paraphrase",
+      "query": "出差住宿费用最多能报销多少钱一晚？",
+      "expected_docs": [
+        "02_报销管理制度.docx"
+      ],
+      "expected_keywords": [
+        "500 元",
+        "350 元"
+      ],
+      "recall_at_top_k": 1.0,
+      "precision_at_top_k": 0.3333333333333333,
+      "mrr": 1.0,
+      "answer_hit": false,
+      "top_docs": [
+        "02_报销管理制度.docx",
+        "01_员工手册.md",
+        "01_员工手册.md"
+      ],
+      "rag_input_tokens": 355,
+      "rag_cost": 0.00311,
+      "full_input_tokens": 11946,
+      "full_cost": 0.026292,
+      "cost_ratio": 8.45
+    },
+    {
+      "id": "P03",
+      "category": "paraphrase",
+      "query": "会议室应该怎么订？",
+      "expected_docs": [
+        "07_会议室使用规范.md"
+      ],
+      "expected_keywords": [
+        "预订",
+        "1 个工作日"
+      ],
+      "recall_at_top_k": 1.0,
+      "precision_at_top_k": 0.3333333333333333,
+      "mrr": 1.0,
+      "answer_hit": true,
+      "top_docs": [
+        "07_会议室使用规范.md",
+        "07_会议室使用规范.md",
+        "07_会议室使用规范.md"
+      ],
+      "rag_input_tokens": 274,
+      "rag_cost": 0.002948,
+      "full_input_tokens": 11930,
+      "full_cost": 0.02626,
+      "cost_ratio": 8.91
+    },
+    {
+      "id": "P04",
+      "category": "paraphrase",
+      "query": "邮箱密码不记得了要怎么办？",
+      "expected_docs": [
+        "06_常见问题FAQ.md"
+      ],
+      "expected_keywords": [
+        "忘记密码",
+        "验证码"
+      ],
+      "recall_at_top_k": 1.0,
+      "precision_at_top_k": 0.3333333333333333,
+      "mrr": 1.0,
+      "answer_hit": true,
+      "top_docs": [
+        "06_常见问题FAQ.md",
+        "08_信息安全管理制度.md",
+        "06_常见问题FAQ.md"
+      ],
+      "rag_input_tokens": 316,
+      "rag_cost": 0.003032,
+      "full_input_tokens": 11938,
+      "full_cost": 0.026276,
+      "cost_ratio": 8.67
+    },
+    {
+      "id": "P05",
+      "category": "paraphrase",
+      "query": "公司对设置密码有什么规定？",
+      "expected_docs": [
+        "08_信息安全管理制度.md"
+      ],
+      "expected_keywords": [
+        "12 位",
+        "MFA"
+      ],
+      "recall_at_top_k": 1.0,
+      "precision_at_top_k": 0.3333333333333333,
+      "mrr": 0.3333333333333333,
+      "answer_hit": true,
+      "top_docs": [
+        "01_员工手册.md",
+        "01_员工手册.md",
+        "08_信息安全管理制度.md"
+      ],
+      "rag_input_tokens": 282,
+      "rag_cost": 0.002964,
+      "full_input_tokens": 11938,
+      "full_cost": 0.026276,
+      "cost_ratio": 8.87
+    },
+    {
+      "id": "N01",
+      "category": "no_answer",
+      "query": "公司食堂今天中午的菜单是什么？",
+      "expected_docs": [],
+      "expected_keywords": [],
+      "recall_at_top_k": null,
+      "precision_at_top_k": 0.0,
+      "mrr": 0.0,
+      "answer_hit": null,
+      "top_docs": [
+        "06_常见问题FAQ.md",
+        "01_员工手册.md",
+        "06_常见问题FAQ.md"
+      ],
+      "rag_input_tokens": 205,
+      "rag_cost": 0.00281,
+      "full_input_tokens": 11942,
+      "full_cost": 0.026284,
+      "cost_ratio": 9.35
+    },
+    {
+      "id": "N02",
+      "category": "no_answer",
+      "query": "2027 年公司年会地点在哪里？",
+      "expected_docs": [],
+      "expected_keywords": [],
+      "recall_at_top_k": null,
+      "precision_at_top_k": 0.0,
+      "mrr": 0.0,
+      "answer_hit": null,
+      "top_docs": [
+        "09_知识库运维周报合集.txt",
+        "09_知识库运维周报合集.txt",
+        "09_知识库运维周报合集.txt"
+      ],
+      "rag_input_tokens": 54,
+      "rag_cost": 0.002508,
+      "full_input_tokens": 11936,
+      "full_cost": 0.026272,
+      "cost_ratio": 10.48
+    },
+    {
+      "id": "N03",
+      "category": "no_answer",
+      "query": "实习生转正后的期权授予细则是什么？",
+      "expected_docs": [],
+      "expected_keywords": [],
+      "recall_at_top_k": null,
+      "precision_at_top_k": 0.0,
+      "mrr": 0.0,
+      "answer_hit": null,
+      "top_docs": [
+        "02_报销管理制度.docx",
+        "06_常见问题FAQ.md",
+        "01_员工手册.md"
+      ],
+      "rag_input_tokens": 263,
+      "rag_cost": 0.002926,
+      "full_input_tokens": 11946,
+      "full_cost": 0.026292,
+      "cost_ratio": 8.99
+    },
+    {
+      "id": "N04",
+      "category": "no_answer",
+      "query": "附近哪家健身房有员工优惠？",
+      "expected_docs": [],
+      "expected_keywords": [],
+      "recall_at_top_k": null,
+      "precision_at_top_k": 0.0,
+      "mrr": 0.0,
+      "answer_hit": null,
+      "top_docs": [
+        "09_知识库运维周报合集.txt",
+        "04_技术运维操作手册.md",
+        "03_客户服务操作手册.md"
+      ],
+      "rag_input_tokens": 282,
+      "rag_cost": 0.002964,
+      "full_input_tokens": 11938,
+      "full_cost": 0.026276,
+      "cost_ratio": 8.87
+    },
+    {
+      "id": "Q01",
+      "category": "normal",
+      "query": "试用期一般是多长时间？",
+      "expected_docs": [
+        "01_员工手册.md"
+      ],
+      "expected_keywords": [
+        "6 个月",
+        "试用期"
+      ],
+      "recall_at_top_k": 1.0,
+      "precision_at_top_k": 0.3333333333333333,
+      "mrr": 1.0,
+      "answer_hit": true,
+      "top_docs": [
+        "01_员工手册.md",
+        "01_员工手册.md",
+        "01_员工手册.md"
+      ],
+      "rag_input_tokens": 423,
+      "rag_cost": 0.003246,
+      "full_input_tokens": 11934,
+      "full_cost": 0.026268,
+      "cost_ratio": 8.09
+    },
+    {
+      "id": "Q02",
+      "category": "normal",
+      "query": "报销单据需要在业务发生后多久内提交？",
+      "expected_docs": [
+        "02_报销管理制度.docx"
+      ],
+      "expected_keywords": [
+        "30 天"
+      ],
+      "recall_at_top_k": 1.0,
+      "precision_at_top_k": 0.3333333333333333,
+      "mrr": 1.0,
+      "answer_hit": true,
+      "top_docs": [
+        "02_报销管理制度.docx",
+        "06_常见问题FAQ.md",
+        "02_报销管理制度.docx"
+      ],
+      "rag_input_tokens": 249,
+      "rag_cost": 0.002898,
+      "full_input_tokens": 11948,
+      "full_cost": 0.026296,
+      "cost_ratio": 9.07
+    },
+    {
+      "id": "Q03",
+      "category": "normal",
+      "query": "会议室单次最长能预订多久？",
+      "expected_docs": [
+        "07_会议室使用规范.md"
+      ],
+      "expected_keywords": [
+        "4 小时"
+      ],
+      "recall_at_top_k": 1.0,
+      "precision_at_top_k": 0.3333333333333333,
+      "mrr": 1.0,
+      "answer_hit": true,
+      "top_docs": [
+        "07_会议室使用规范.md",
+        "07_会议室使用规范.md",
+        "07_会议室使用规范.md"
+      ],
+      "rag_input_tokens": 270,
+      "rag_cost": 0.00294,
+      "full_input_tokens": 11938,
+      "full_cost": 0.026276,
+      "cost_ratio": 8.94
+    },
+    {
+      "id": "Q04",
+      "category": "normal",
+      "query": "哪些数据属于机密级别？",
+      "expected_docs": [
+        "08_信息安全管理制度.md"
+      ],
+      "expected_keywords": [
+        "客户数据",
+        "财务数据",
+        "产品源码"
+      ],
+      "recall_at_top_k": 1.0,
+      "precision_at_top_k": 0.3333333333333333,
+      "mrr": 1.0,
+      "answer_hit": true,
+      "top_docs": [
+        "08_信息安全管理制度.md",
+        "08_信息安全管理制度.md",
+        "08_信息安全管理制度.md"
+      ],
+      "rag_input_tokens": 287,
+      "rag_cost": 0.002974,
+      "full_input_tokens": 11934,
+      "full_cost": 0.026268,
+      "cost_ratio": 8.83
+    },
+    {
+      "id": "Q05",
+      "category": "normal",
+      "query": "客服 P0 工单的响应时限是多少？",
+      "expected_docs": [
+        "03_客户服务操作手册.md"
+      ],
+      "expected_keywords": [
+        "15 分钟",
+        "4 小时"
+      ],
+      "recall_at_top_k": 1.0,
+      "precision_at_top_k": 0.3333333333333333,
+      "mrr": 1.0,
+      "answer_hit": true,
+      "top_docs": [
+        "03_客户服务操作手册.md",
+        "09_知识库运维周报合集.txt",
+        "09_知识库运维周报合集.txt"
+      ],
+      "rag_input_tokens": 238,
+      "rag_cost": 0.002876,
+      "full_input_tokens": 11940,
+      "full_cost": 0.02628,
+      "cost_ratio": 9.14
+    }
+  ]
+}
